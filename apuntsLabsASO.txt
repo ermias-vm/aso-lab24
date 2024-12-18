@@ -1,0 +1,96 @@
+
+        // LAB 1:
+
+                                Hardware model                          Device Name
+
+
+Network Card            : 07:00.0 Intel Corporation                     Wi-Fi Adapter  
+                          Wi-Fi 6 AX200 (rev 1a)
+                          08:00.0 Realtek Semiconductor Co., Ltd.       Ethernet Controller
+                          
+Internal Hard Drive     :01:00.0 Sandisk Corp WD Blue SN500 /           NVMe SSD
+                        PC SN520 x2 M.2 2280 NVMe SSD (rev 01)
+
+USB Hard Drive          :Bus 002 Device 002: ID 0781:55a3 SanDisk Corp  SanDisk 3.2Gen1
+
+
+
+#       sudo umount /dev/sda1
+
+#       sudo gdisk /dev/sda    -> (interficie gràfica)  #  cfdisk /dev/sda
+
+                //gdisk :
+
+b       back up GPT data to a file
+c       change a partition's name
+d       delete a partition
+i       show detailed information on a partition
+l       list known partition types
+n       add a new partition
+o       create a new empty GUID partition table (GPT)
+p       print the partition table
+q       quit without saving changes
+r       recovery and transformation options (experts only)
+s       sort partitions
+t       change a partition's type code
+v       verify disk
+w       write table to disk and exit
+x       extra functionality (experts only)
+?       print this menu
+
+
+
+#       sudo mkswap /dev/sda5
+
+        // # mkfs -t fstype device      (SWAP)
+
+        sudo mkfs -t vfat /dev/sda1     (EFI)
+        sudo mkfs -t ext4 /dev/sda2    (home, root ....)
+        
+for i in /dev /dev/pts /proc /sys /run; do
+    mount -B $i /linux/$i
+done
+
+-B o --bind: Esta opción se utiliza para crear un enlace de un sistema de archivos en otro
+ punto de montaje. En lugar de montar un sistema de archivos real (como un disco o una partición), 
+ estás creando un vínculo a un sistema de archivos que ya está montado en otro lugar. Esto significa 
+ que cualquier cambio que se haga en el punto de montaje original se reflejará en el n
+ uevo punto de montaje
+
+# mount  -> muestra todos los sistemas de archivos montados en el sistema
+        # mount | column -t   (visualizado poer columnas, -t(dividir columnas usando espacios blancos))
+
+
+
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda      8:0    1  233G  0 disk 
+├─sda1   8:1    1  512M  0 part /linux/boot/efi
+├─sda2   8:2    1   30G  0 part /linux
+├─sda3   8:3    1    5G  0 part /linux/usr/local
+├─sda4   8:4    1  100G  0 part /linux/home
+├─sda5   8:5    1   32G  0 part [SWAP]
+└─sda6   8:6    1   20G  0 part 
+
+
+
+
+#       chroot /linux  (canbia la raiz a /linux)  
+                -> ejecutar desde zsh : # sudo chroot /linux /bin/bash
+        verificar (entorno) con ls /
+       
+         
+        //Desmontar todas las particiones : 
+#       sudo umount -R /linux
+
+
+/// 
+
+LAB4 -> USER MANAGEMENT
+
+% sudo useradd -u <custom_uid> username
+
+% sudo chown user:group myfile.txt
+% sudo chown -R user:group /mydir
+
+% chmod 644 myfile.txt   # rw-r--r--
+% chmod -R 755 /mydir    # rwxr-xr-x

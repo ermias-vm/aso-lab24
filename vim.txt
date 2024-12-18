@@ -1,0 +1,41 @@
+    i - Entra en el modo de inserción antes del cursor.
+    a - Entra en el modo de inserción después del cursor.
+    o - Abre una nueva línea debajo del cursor y entra en el modo de inserción.
+    x - Borra el carácter bajo el cursor.
+    dd - Elimina la línea actual.
+    yy - Copia la línea actual (yank).
+    p - Pega el texto copiado/cortado después del cursor.
+    u - Deshace la última acción.
+    Ctrl + r - Rehace la última acción deshecha.
+    gg - Mueve el cursor al inicio del archivo.
+    G - Mueve el cursor al final del archivo.
+    :w - Guarda los cambios en el archivo.
+    :q - Sale de Vim.
+    :wq - Guarda y sale.
+    :q! - Sale sin guardar.
+
+Navegación en el Texto
+
+    h - Mueve el cursor un carácter a la izquierda.
+    l - Mueve el cursor un carácter a la derecha.
+    j - Mueve el cursor una línea hacia abajo.
+    k - Mueve el cursor una línea hacia arriba.
+    w - Salta al inicio de la siguiente palabra.
+    e - Salta al final de la palabra actual.
+    b - Salta al inicio de la palabra anterior.
+    0 - Mueve el cursor al inicio de la línea actual.
+    ^ - Mueve el cursor al primer carácter no vacío de la línea.
+    $ - Mueve el cursor al final de la línea actual.
+    % - Salta entre paréntesis, corchetes o llaves coincidentes.
+
+Operaciones Avanzadas
+
+    v - Entra en el modo visual para seleccionar texto.
+    V - Selecciona una línea completa en modo visual.
+    Ctrl + v - Entra en el modo visual por bloques (selección rectangular).
+    :set number - Muestra números de línea.
+    :set nonumber - Oculta los números de línea.
+    /texto - Busca "texto" hacia adelante en el archivo.
+    ?texto - Busca "texto" hacia atrás en el archivo.
+    n - Repite la última búsqueda en la misma dirección.
+    N - Repite la última búsqueda en la dirección opuesta.

@@ -1,0 +1,133 @@
+  
+ UTILS:
+
+Muestra el uso del disco.
+du -sh /root/       (-s = resumen , -h formato  legible (human) , -k (KB), -b, m)
+# tar -tf /path/to/backup.tar  (-t llista el  contingut ) 
+
+ tar -tf /path/to/backup.tar > backup_contents.txt
+ ls -Ra /path/to/directory/ > original_directory_contents.txt
+ diff backup_contents.txt original_directory_contents.txt
+ 
+ PASOS LAB 5:
+
+ 
+ 
+  (backup complet = nivell 0 ) backup incremental = nivell 2
+1 
+
+
+
+
+##OPCIONAL PER MES SEGURETAT 
+Muntar la partició /dev/sda6 com a només lectura  (quan no es faci backup)
+# sudo mount -o remount,ro /dev/sda6 /backup
+
+Muntar la partició /dev/sda6 en mode lectura i escriptura (quan es fa el backup)
+# sudo mount -o remount,rw /dev/sda6 /backup
+
+
+Obtenir hora en format especificat : 
+# date +"%Y%m%d%H%M%S" -> sortida    20241218123045   
+
+
+Crear backup nivell 0 (complet) amb tar: 
+ opcionalment : -p per conservar permisos 
+
+# tar -cpf /backup/backup-root-nivell0-$(date +"%Y%m%d%H%M%S").tar /root
+
+
+Excluir archivos usando un archivo con los que queremos Excluir
+
+tar -cpf /backup/backup-root-nivell0-$(date +"%Y%m%d%H%M%S").tar --exclude-from=./excludes /root
+
+
+
+Crear hash  del backup 
+    # md5sum  backup-root-nivell0-20241218124911.tar  > backup-root-nivell0-20241218124911.asc
+
+comparar  correctesa (el .asc conte el hash y de quin archiu la tret)
+    # md5sum -c backup-root-nivell0-20241218124911.asc
+
+
+        Backup Incremental (TAR)
+
+opcio --newer=
+--newer="2024-12-18 12:00"              // data especificada 
+-newer=/backup/backup-root-nivell0-20241.tar   //(usa data ultima mod fitxer)
+ 
+tar -cpf /backup/backup-root-nivell1-$(date +"%Y%m%d%H%M%S").tar --newer=/backup/backup-root-nivell0-20241218124911.tar /root
+
+
+
+        Comanda per restaura copies  usant tar:
+-C / indica que s'extraura restaurarant directament a /
+
+//PRIMER COMPLET i despres incrementals per ordre
+sudo tar -xpf /backup/backup-root-nivell0-20241218124911.tar -C /
+
+sudo tar -xpf /backup/backup-root-nivell1-20241218131914.tar -C /
+
+
+    RECUPERAR UN ARCHIVO O DIRECTORIO  ESPECIFICO del backup
+    (no poner /  al especificar el archivo root/fitxer1 del backup)
+    (-C /)  para que se extraiga en /   ; root/fixer1 solo se extraera este archivo
+sudo tar -xpf /backup/backup-root-nivell1-20241218131914.tar -C / root/fitxer1
+
+
+
+        Backup amb RSYNC
+
+ abans de poder conectar amb SSH:
+///
+(sudo apt install openssh-server)
+(sudo systemctl status ssh) 
+        sudo ssh root@localhost (hauria de conectar)
+sudo systemctl restart ssh
+sudo vim  /etc/ssh/sshd_config
+        Modificar  descomentar y modificar : 
+            PermitRootLogin yes
+            PasswordAuthentication yes
+///
+
+# rsync -avz -e ssh /root root@localhost:/backup/backup-rsync/ 
+
+
+    -a (archimve mode )  Activa el mode arxiu, que conserva permisos, propietaris,
+                     grups, timestamps, enllaços simbòlics, i estructura de directoris
+    -v (verbose) , -z (compress)
+
+    -e ssh (indica que s'utiliza SSH com a protocol per la transferencia)
+
+Si volguessis fer el mateix però a un servidor remot amb IP 192.168.1.100, faries:
+        rsync -avz /root -e ssh root@192.168.1.100:/backup/backup-rsync/
+
+
+(per defecte rsyn no elimina  fitxers al directori de desti que ja no existeixin al original)
+    Per a fer-ho -> --delete
+# rsync -avz --delete -e ssh /root root@localhost:/backup/backup-rsync/
+
+
+Exluier .txt  -> --exclude='*.txt'
+# rsync -avz --exclude='*.txt' /home/aso/Documentos/ASO/lab /backup/homeBackup/
+
+rsync -av /source /destí ->  es copiara   contingut de /source incloent la carpeta source
+rsync -av /source/ /destí/ -> sense incloure la carpeta sorce, directament el contingut a /desti/
+
+
+rsync -avz --exclude='*.txt' /home/aso/Documentos/ASO/lab /backup/homeBackup/
+
+
+
+
+
+ Realització de còpies incrementals inverses
+//resulta del script seria :
+
+rsync --ignore-errors --delete-excluded 
+--exclude-from=/home/aso/Documentos/ASO/lab/l5/excludes 
+--delete --backup --backup-dir=/backup/rootBackup/20241218103030 
+-av /root root@localhost:/backup/rootBackup/complet
+
+# HARD fileHardLink
+ln fileOrig fileHardLink

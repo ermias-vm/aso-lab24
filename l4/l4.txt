@@ -1,0 +1,42 @@
+//script substitueix bash ; assignar a /etc/shells
+
+/usr/local/bin/failed-login.sh
+
+
+
+
+# Copiar todos los archivos encontrados al directorio de respaldo
+sudo find / -user usuario1 -print0 | sudo xargs -0 cp -t /backup/usuario1/
+
+
+Para buscar todos los archivos de un usuario y eliminarlos:
+find / -user usuario1 -print0 | xargs -0 rm -rf
+find / -user usuario1 -exec rm -rf {} +
+
+
+    //
+Eliminar la cuenta de usuario  (solo para eliminar definitivamente) : 
+sudo userdel -r usuario1
+
+
+
+añadir a /etc/shells  -> /usr/local/bin/asosh
+sudo useradd -m -s /usr/bin/asosh
+sudo passwd asosh
+añadir a /etc/shells  -> /usr/local/bin/asosh
+
+sudo chmod 700 /usr/bin/asosh
+
+
+
+ -> /etc/sudoers.tmp
+
+root    ALL=(ALL:ALL) ALL
+
+# Allow members of group sudo to execute any command
+%sudo   ALL=(ALL:ALL) ALL
+
+# ADD lab4                                                   
+%admin ALL=(ALL) ALL
+%teachers ALL=(ALL) NOPASSWD: /usr/local/bin/rmUser.sh, /usr/local/teachers/bin/*
+##
