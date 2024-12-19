@@ -1,0 +1,50 @@
+ssh -i "EEE.pem" ec2-user@ec2-44-202-50-58.compute-1.amazonaws.com
+
+sudo yum update -y
+  //instalar APACHE          .> alternativament nginx -> sudo yum install nginx -y
+sudo yum install httpd -y 
+
+  //ACTIVAR APACHE
+sudo systemctl start httpd
+sudo systemctl enable httpd
+
+
+Si usas Apache, el directorio por defecto es /var/www/html/.
+Si usas Nginx, el directorio por defecto es /usr/share/nginx/html/
+
+echo '<html><body><h1>Examen ASO</h1></body></html>' | sudo tee /var/www/html/index.html
+
+
+
+
+
+///////
+stpf asoserver.pc.ac.upc.edu
+put FOTOaPujar_4.34.63.123.png
+/////////////////////////////////////////////////
+
+
+crear EC ->  comanda (dins de la instancia ECD -> connect -> shh
+    ssh -i "lastWorpresKey.pem" ec2-user@ec2-52-201-242-246.compute-1.amazonaws.com
+
+# sudo su
+
+
+
+
+
+install a MySQL client to interact with the database. 
+  sudo yum install -y mysql; 
+
+Instal·la el servidor MariaDB:
+sudo yum install -y mariadb105-server
+
+Inicia i habilita el servei MariaDB:
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+
+Configura MariaDB (equivalent a la configuració de MySQL):
+sudo mysql_secure_installation
+
+Connecta’t a MariaDB:
+mysql -u root -p
